@@ -1,64 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Game</title>
+<title>Memory Game - NeonStakee</title>
 <style>
-body { background: #1e1e2f; color: white; text-align: center; font-family: Arial; }
-.grid { display: grid; grid-template-columns: repeat(4, 80px); gap: 10px; justify-content: center; margin-top: 20px; }
-.card { width: 80px; height: 80px; background: #3b3b55; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; border-radius: 8px; }
-.card.flipped { background: #00ffaa; }
+body {
+  background: #0d0d1a;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+}
+h1 {
+  color: #00ffaa;
+  text-shadow: 0 0 10px #00ffaa;
+}
+#game-board {
+  display: grid;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.card {
+  width: 70px;
+  height: 70px;
+  background: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  box-shadow: 0 0 5px #00ffaa;
+}
+.card.flipped {
+  background: #00ffaa;
+  font-size: 24px;
+  transform: rotateY(180deg);
+}
+.win-message {
+  font-size: 20px;
+  margin-top: 15px;
+  color: #00ffaa;
+}
 </style>
 </head>
 <body>
+
 <h1>🃏 Memory Game</h1>
-<div class="grid" id="grid"></div>
+<div id="game-board"></div>
+<div id="message" class="win-message"></div>
 <a href="../games.html" style="color:#00ffaa;">⬅ Back</a>
 
 <script>
-const icons = ['🍎','🍎','🍌','🍌','🍇','🍇','🍒','🍒'];
-let grid = document.getElementById('grid');
-let cards = [];
-let first, second;
-let lock = false;
+let board = document.getElementById("game-board");
+let message = document.getElementById("message");
+let gridSize = 4;
+let firstCard, secondCard;
+let lockBoard = false;
+let matchedPairs = 0;
 
-function start(){
-  let arr = [...icons].sort(()=>0.5 - Math.random());
-  arr.forEach(icon=>{
-    let card = document.createElement('div');
-    card.classList.add('card');
-    card.innerHTML = '';
-    card.dataset.icon = icon;
-    card.addEventListener('click', flip);
-    grid.appendChild(card);
+function startGame() {
+  board.innerHTML = "";
+  message.textContent = "";
+  matchedPairs = 0;
+  let totalCards = gridSize * gridSize;
+  let emojis = ["😀","🎮","🚀","🔥","💎","🎯","🕹","⭐","🍀","🏆","🎲","⚡","🎸","📱","💡","❤️"];
+  let gameEmojis = emojis.slice(0, totalCards / 2);
+  let cardValues = [...gameEmojis, ...gameEmojis].sort(() => Math.random() - 0.5);
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 70px)`;
+  board.style.gridTemplateRows = `repeat(${gridSize}, 70px)`;
+  
+  cardValues.forEach(value => {
+    let card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.value = value;
+    card.innerHTML = value;
+    card.style.fontSize = "0"; 
+    card.addEventListener("click", flipCard);
+    board.appendChild(card);
   });
 }
-function flip(){
-  if(lock || this.classList.contains('flipped')) return;
-  this.classList.add('flipped');
-  this.innerHTML = this.dataset.icon;
-  if(!first) first = this;
-  else{
-    second = this;
-    check();
+
+function flipCard() {
+  if (lockBoard || this === firstCard || this.classList.contains("flipped")) return;
+  this.classList.add("flipped");
+  this.style.fontSize = "24px";
+
+  if (!firstCard) {
+    firstCard = this;
+    return;
   }
+  secondCard = this;
+  checkMatch();
 }
-function check(){
-  if(first.dataset.icon === second.dataset.icon){
-    first = second = null;
+
+function checkMatch() {
+  if (firstCard.dataset.value === secondCard.dataset.value) {
+    matchedPairs++;
+    resetTurn();
+    if (matchedPairs === (gridSize * gridSize) / 2) {
+      message.textContent = `🎉 You cleared ${gridSize}x${gridSize}! Next level loading...`;
+      setTimeout(() => {
+        if (gridSize < 10) {
+          gridSize += 2;
+          startGame();
+        } else {
+          message.textContent = "🏆 You completed all levels!";
+        }
+      }, 1500);
+    }
   } else {
-    lock = true;
-    setTimeout(()=>{
-      first.classList.remove('flipped');
-      second.classList.remove('flipped');
-      first.innerHTML = '';
-      second.innerHTML = '';
-      first = second = null;
-      lock = false;
-    }, 1000);
+    lockBoard = true;
+    setTimeout(() => {
+      firstCard.classList.remove("flipped");
+      secondCard.classList.remove("flipped");
+      firstCard.style.fontSize = "0";
+      secondCard.style.fontSize = "0";
+      resetTurn();
+    }, 800);
   }
 }
-start();
+
+function resetTurn() {
+  [firstCard, secondCard, lockBoard] = [null, null, false];
+}
+
+startGame();
 </script>
 </body>
 </html>
