@@ -5,26 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dino Run - NeonStake</title>
 <style>
-  body {
-    background: #f7f7f7;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-  }
-  canvas {
-    display: block;
-    margin: 0 auto;
-    background: white;
-    border: 2px solid #ccc;
-  }
+body {
+  background: #fff;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+canvas {
+  display: block;
+  margin: auto;
+  background: white;
+  border: 2px solid #ccc;
+}
+button {
+  padding: 10px 20px;
+  background: #00ffaa;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 10px;
+}
 </style>
 </head>
 <body>
 
 <h1>🦖 Dino Run</h1>
 <canvas id="dinoGame" width="800" height="200"></canvas>
-<p>Press SPACE to jump</p>
-<a href="../games.html">⬅ Back to Game Zone</a>
+<button id="jumpBtn">Jump</button>
+<p>Press SPACE or Tap "Jump"</p>
+<a href="../games.html">⬅ Back</a>
 
 <script>
 const canvas = document.getElementById('dinoGame');
@@ -36,12 +45,17 @@ let obstacles = [];
 let frame = 0;
 let score = 0;
 
-document.addEventListener('keydown', e => {
-  if (e.code === 'Space' && !dino.jump) {
+function jump(){
+  if (!dino.jump) {
     dino.dy = -15;
     dino.jump = true;
   }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') jump();
 });
+document.getElementById('jumpBtn').addEventListener('click', jump);
 
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -65,33 +79,26 @@ function update() {
     obs.x -= 6;
     ctx.fillStyle = '#555';
     ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
-
-    // Collision
-    if (
-      dino.x < obs.x + obs.w &&
-      dino.x + dino.w > obs.x &&
-      dino.y < obs.y + obs.h &&
-      dino.y + dino.h > obs.y
-    ) {
+    if (dino.x < obs.x + obs.w &&
+        dino.x + dino.w > obs.x &&
+        dino.y < obs.y + obs.h &&
+        dino.y + dino.h > obs.y) {
       alert('Game Over! Score: ' + score);
       obstacles = [];
       score = 0;
     }
-
     if (obs.x + obs.w < 0) {
       obstacles.splice(i, 1);
       score++;
     }
   });
 
-  // Score
   ctx.fillStyle = '#000';
   ctx.fillText('Score: ' + score, 700, 20);
 
   frame++;
   requestAnimationFrame(update);
 }
-
 update();
 </script>
 </body>
