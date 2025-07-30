@@ -4,32 +4,135 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Welcome to NeonStake</title>
+
+<!-- CSS -->
 <link rel="stylesheet" href="css/welcome.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<!-- Particles.js -->
 <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  /* Logo */
+  .logo-container {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+  .logo-container img {
+    width: 50px;
+    height: 50px;
+  }
+  .logo-container span {
+    font-size: 26px;
+    font-weight: bold;
+    color: #00ffaa;
+    text-shadow: 0 0 5px #00ffaa, 0 0 15px #00ffaa;
+  }
+
+  /* Welcome Text */
+  .welcome-container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 15px;
+  }
+  .welcome-container h1 {
+    font-size: 38px;
+    text-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa;
+  }
+  .welcome-container h1 span {
+    color: #00ffaa;
+  }
+  .welcome-container p {
+    font-size: 20px;
+    margin-top: 10px;
+    color: #ccc;
+  }
+  .welcome-container button {
+    margin-top: 20px;
+    padding: 12px 28px;
+    font-size: 18px;
+    background: #00ffaa;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa;
+    transition: 0.3s;
+  }
+  .welcome-container button:hover {
+    background: #00dd99;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .logo-container span {
+      font-size: 20px;
+    }
+    .welcome-container h1 {
+      font-size: 28px;
+    }
+    .welcome-container p {
+      font-size: 16px;
+    }
+    .welcome-container button {
+      font-size: 16px;
+      padding: 10px 20px;
+    }
+  }
+
+  #particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+</style>
 </head>
 <body>
-  <!-- Particles Background -->
-  <div id="particles-js"></div>
 
-  <!-- Welcome Content -->
-  <div class="welcome-container">
-    <h1>🎮 Welcome to <span>NeonStake</span> 🎮</h1>
-    <p>Get ready for the ultimate gaming experience!</p>
-    <button onclick="startGames()">Enter Game Zone</button>
-  </div>
+<!-- Particles Background -->
+<div id="particles-js"></div>
 
-  <!-- Background Music -->
-  <audio autoplay loop>
-    <source src="assets/welcome-music.mp3" type="audio/mpeg">
-  </audio>
+<!-- Logo -->
+<div class="logo-container">
+  <img src="assets/logo.png" alt="NeonStake Logo">
+  <span>NeonStake</span>
+</div>
+
+<!-- Welcome Content -->
+<div class="welcome-container">
+  <h1>🎮 Welcome to <span>NeonStake</span> 🎮</h1>
+  <p>Get ready for the ultimate gaming experience!</p>
+  <button onclick="startGames()">Enter Game Zone</button>
+</div>
+
+<!-- Background Music -->
+<audio autoplay loop>
+  <source src="assets/welcome-music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 function startGames(){
   window.location.href = "games.html";
 }
-</script>
 
-<script>
 // Particles.js Config
 particlesJS("particles-js", {
   "particles": {
@@ -42,5 +145,6 @@ particlesJS("particles-js", {
   }
 });
 </script>
+
 </body>
 </html>
