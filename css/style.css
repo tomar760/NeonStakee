@@ -1,72 +1,267 @@
+/* Your existing @import for Orbitron is good */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
+/* --- Global Styles --- */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Orbitron', sans-serif;
-  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
-  color: #fff;
+    margin: 0;
+    padding: 0;
+    /* Using the background gradient from the new code, it fits your theme */
+    background: #141e30;  /* fallback for old browsers */
+    background: linear-gradient(to right, #243b55, #141e30);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif; /* Keep Orbitron as your primary font */
+    color: #fff; /* Ensure text is white */
+    overflow: hidden; /* Hide scrollbars as content is centered */
+}
+
+/* New wrapper to center the login box if body is not direct parent */
+.login-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* --- Login Box Container (Main Card) --- */
+.login-box {
+    position: relative;
+    width: 400px;
+    padding: 40px;
+    background: rgba(0,0,0,.7); /* Slightly darker for better contrast */
+    box-shadow: 0 0 30px rgba(0,255,170,0.8); /* Enhanced glow effect from your original theme */
+    border-radius: 10px;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.login-box h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #00ffaa; /* Your neon accent color */
+    text-align: center;
+    font-size: 2.5rem; /* Larger heading */
+    text-shadow: 0 0 10px #00ffaa; /* Added text glow */
+    font-family: 'Orbitron', sans-serif; /* Ensure heading uses Orbitron */
+}
+
+/* --- Site Logo Styles (Moved from inline HTML) --- */
+.site-logo {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
+  margin-bottom: 30px; /* Space below logo */
+  gap: 10px;
+}
+.site-logo img {
+  width: 70px; /* Slightly larger logo */
+  height: 70px;
+  border-radius: 15px; /* More rounded */
+  box-shadow: 0 0 15px #00ffaa, 0 0 25px #00ffaa; /* Enhanced glow */
+}
+.site-logo span {
+  font-family: 'Orbitron', sans-serif; /* Apply Orbitron here */
+  font-size: 38px; /* Slightly larger text */
+  font-weight: bold;
+  color: #00ffaa;
+  text-shadow: 0 0 8px #00ffaa, 0 0 15px #00ffaa; /* Enhanced text shadow */
 }
 
-.login-container {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0px 0px 30px rgba(0,255,170,0.6);
-}
-
-.logo {
-  font-size: 2.5rem;
-  color: #0fffc3;
-  text-shadow: 0px 0px 15px #0fffc3, 0px 0px 30px #00ffaa;
-}
-
+/* --- Form Display & Switching --- */
 .form {
-  display: none;
-  flex-direction: column;
+  display: none; /* Hide forms by default */
+  flex-direction: column; /* Stack elements vertically */
 }
 
 .form.active {
-  display: flex;
+  display: flex; /* Show active form */
 }
 
-input {
-  padding: 12px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 1rem;
+/* --- Input Field (User Box) Styles --- */
+.login-box .user-box {
+    position: relative;
+    margin-bottom: 30px; /* Space between input fields */
 }
 
-button {
-  padding: 12px;
-  margin-top: 10px;
-  background: linear-gradient(90deg, #00ffaa, #00e0ff);
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.login-box .user-box input {
+    width: calc(100% - 2px); /* 100% minus border width */
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #fff; /* White bottom border */
+    outline: none;
+    background: transparent;
+    transition: .5s; /* Smooth transition for focus */
 }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 0px 15px #00ffaa;
+.login-box .user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7); /* Slightly muted white for labels */
+    pointer-events: none;
+    transition: .5s;
 }
 
-a {
-  color: #00ffaa;
-  text-decoration: none;
+/* Input Focus & Valid (Filled) State for Label Animation */
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label,
+.login-box .user-box input:not(:placeholder-shown) ~ label { /* Added placeholder-shown for persistence */
+    top: -20px;
+    left: 0;
+    color: #03e9f4; /* Your neon accent for active label */
+    font-size: 12px;
+    text-shadow: 0 0 5px #03e9f4; /* Subtle glow for active label */
 }
 
-a:hover {
-  text-shadow: 0px 0px 5px #00ffaa;
+/* --- Animated Submit Button --- */
+.login-box .animated-button { /* Changed from 'a' to a specific class for clarity */
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4; /* Neon color for text */
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 40px;
+    letter-spacing: 4px;
+    /* Center the button */
+    display: block; /* Make it a block element to take full width of container */
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* Adjust width to content */
+    cursor: pointer; /* Ensure it looks clickable */
+}
+
+.login-box .animated-button:hover {
+    background: #03e9f4;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
+
+.login-box .animated-button span {
+    position: absolute;
+    display: block;
+}
+
+.login-box .animated-button span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #03e9f4);
+    animation: btn-anim1 1s linear infinite;
+}
+
+@keyframes btn-anim1 {
+    0% {
+        left: -100%;
+    }
+    50%,100% {
+        left: 100%;
+    }
+}
+
+.login-box .animated-button span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #03e9f4);
+    animation: btn-anim2 1s linear infinite;
+    animation-delay: .25s
+}
+
+@keyframes btn-anim2 {
+    0% {
+        top: -100%;
+    }
+    50%,100% {
+        top: 100%;
+    }
+}
+
+.login-box .animated-button span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #03e9f4);
+    animation: btn-anim3 1s linear infinite;
+    animation-delay: .5s
+}
+
+@keyframes btn-anim3 {
+    0% {
+        right: -100%;
+    }
+    50%,100% {
+        right: 100%;
+    }
+}
+
+.login-box .animated-button span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #03e9f4);
+    animation: btn-anim4 1s linear infinite;
+    animation-delay: .75s
+}
+
+@keyframes btn-anim4 {
+    0% {
+        bottom: -100%;
+    }
+    50%,100% {
+        bottom: 100%;
+    }
+}
+
+/* --- General Link Styles (for "Don't have an account?", "Already have an account?") --- */
+.login-box p {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.8); /* Muted white for general text */
+    font-size: 0.95rem; /* Slightly smaller for subsidiary text */
+}
+
+.login-box p a {
+    color: #00ffaa; /* Your neon accent color for these links */
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.login-box p a:hover {
+    color: #03e9f4; /* Brighter neon on hover */
+    text-shadow: 0 0 5px #03e9f4;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 500px) {
+    .login-box {
+        width: 90%;
+        padding: 30px;
+    }
+    .login-box h2 {
+        font-size: 2rem;
+    }
+    .site-logo img {
+        width: 60px;
+        height: 60px;
+    }
+    .site-logo span {
+        font-size: 30px;
+    }
 }
