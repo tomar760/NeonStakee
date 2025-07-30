@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rock Paper Scissors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { text-align: center; font-family: Arial; background: #1e1e2f; color: white; }
+button { padding: 10px 20px; margin: 10px; background: #00ffaa; border: none; border-radius: 8px; }
+</style>
+</head>
+<body>
+<h1>✊ Rock ✋ Paper ✌ Scissors</h1>
+<div>
+<button onclick="play('rock')">Rock</button>
+<button onclick="play('paper')">Paper</button>
+<button onclick="play('scissors')">Scissors</button>
+</div>
+<h2 id="result"></h2>
+<a href="../games.html" style="color:#00ffaa;">⬅ Back</a>
+
+<script>
+function play(user){
+  const choices = ['rock','paper','scissors'];
+  const comp = choices[Math.floor(Math.random()*3)];
+  let result = '';
+  if(user === comp) result = "Draw! Computer also chose " + comp;
+  else if(
+    (user === 'rock' && comp === 'scissors') ||
+    (user === 'paper' && comp === 'rock') ||
+    (user === 'scissors' && comp === 'paper')
+  ) result = "You Win! Computer chose " + comp;
+  else result = "You Lose! Computer chose " + comp;
+  document.getElementById('result').innerText = result;
+}
+</script>
+</body>
+</html>
