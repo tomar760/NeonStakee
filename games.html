@@ -3,20 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeonStake - Game Zone</title>
-<link rel="stylesheet" href="css/games.css">
+<title>NeonStakee - Game Zone</title>
+<style>
+body { background: #0d0d1a; color: white; font-family: Arial, sans-serif; text-align: center; }
+h1 { color: #00ffaa; }
+.game-list { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+.game-card {
+  background: #1a1a2e;
+  width: 200px;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
+  transition: 0.3s;
+  text-align: center;
+}
+.game-card:hover { transform: scale(1.05); background: #222244; }
+.game-card a { color: #00ffaa; text-decoration: none; font-weight: bold; }
+</style>
 </head>
 <body>
 
-<h1 class="title">🎮 NeonStake Game Zone 🎮</h1>
+<h1>🎮 Welcome to NeonStakee Game Zone</h1>
+<p>Select a game to play</p>
 
-<div class="game-grid">
-  <a href="games/dino.html" class="game-card">Dino Run</a>
-  <a href="games/tictactoe.html" class="game-card">Tic Tac Toe</a>
-  <a href="games/memory.html" class="game-card">Memory Game</a>
-  <a href="games/rps.html" class="game-card">Rock Paper Scissors</a>
-  <a href="games/2048.html" class="game-card">2048</a>
+<div class="game-list">
+  <div class="game-card"><a href="games/dino.html">🦖 Dino Run</a></div>
+  <div class="game-card"><a href="games/tictactoe.html">❌ Tic Tac Toe</a></div>
+  <div class="game-card"><a href="games/memory.html">🃏 Memory Game</a></div>
+  <div class="game-card"><a href="games/rps.html">✊ Rock Paper Scissors</a></div>
+  <div class="game-card"><a href="games/2048.html">🔢 2048 Game</a></div>
 </div>
+
+<br>
+<a href="welcome.html" style="color:#00ffaa;">⬅ Back to Home</a>
 
 </body>
 </html>
