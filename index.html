@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeonStake - Login</title>
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png"/>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css"/>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-  <!-- Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAMjd9m5roRYD1kOtmLfFOGFU2e1CWcPto",
@@ -29,99 +25,56 @@
     firebase.initializeApp(firebaseConfig);
   </script>
 
-  <style>
-    /* Extra styling for logo */
-    .site-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      gap: 10px;
-    }
-    .site-logo img {
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa;
-    }
-    .site-logo span {
-      font-size: 32px;
-      font-weight: bold;
-      color: #00ffaa;
-      text-shadow: 0 0 5px #00ffaa, 0 0 10px #00ffaa;
-    }
-  </style>
-</head>
+  </head>
 <body>
-  <div class="login-container">
+  <div class="login-page-wrapper"> <div class="login-box"> <div class="site-logo">
+        <img src="assets/logo.png" alt="NeonStake Logo">
+        <span>NeonStake</span>
+      </div>
 
-    <!-- Premium Logo -->
-    <div class="site-logo">
-      <img src="assets/logo.png" alt="NeonStake Logo">
-      <span>NeonStake</span>
+      <form id="loginForm" class="form active">
+        <h2>Login</h2>
+        <div class="user-box">
+          <input type="email" id="loginEmail" required="" placeholder=" "> <label>Email</label>
+        </div>
+        <div class="user-box">
+          <input type="password" id="loginPassword" required="" placeholder=" "> <label>Password</label>
+        </div>
+        <a href="#" class="animated-button" onclick="document.getElementById('loginForm').dispatchEvent(new Event('submit'))">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Submit
+        </a>
+        <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
+      </form>
+
+      <form id="registerForm" class="form">
+        <h2>Register</h2>
+        <div class="user-box">
+          <input type="text" id="registerName" required="" placeholder=" ">
+          <label>Full Name</label>
+        </div>
+        <div class="user-box">
+          <input type="email" id="registerEmail" required="" placeholder=" ">
+          <label>Email</label>
+        </div>
+        <div class="user-box">
+          <input type="password" id="registerPassword" required="" placeholder=" ">
+          <label>Password</label>
+        </div>
+        <a href="#" class="animated-button" onclick="document.getElementById('registerForm').dispatchEvent(new Event('submit'))">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Register
+        </a>
+        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+      </form>
     </div>
-
-    <!-- Login Form -->
-    <form id="loginForm" class="form active">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Email" required/>
-      <input type="password" id="loginPassword" placeholder="Password" required/>
-      <button type="submit">Login</button>
-      <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
-    </form>
-
-    <!-- Register Form -->
-    <form id="registerForm" class="form">
-      <h2>Register</h2>
-      <input type="text" id="registerName" placeholder="Full Name" required/>
-      <input type="email" id="registerEmail" placeholder="Email" required/>
-      <input type="password" id="registerPassword" placeholder="Password" required/>
-      <button type="submit">Register</button>
-      <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
-    </form>
   </div>
 
-  <script>
-    // Switch between Login/Register
-    document.getElementById("showRegister").addEventListener("click", () => {
-      document.getElementById("loginForm").classList.remove("active");
-      document.getElementById("registerForm").classList.add("active");
-    });
-
-    document.getElementById("showLogin").addEventListener("click", () => {
-      document.getElementById("registerForm").classList.remove("active");
-      document.getElementById("loginForm").classList.add("active");
-    });
-
-    // Login
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
-        window.location.href = "welcome.html";
-      })
-      .catch(error => alert(error.message));
-    });
-
-    // Register
-    document.getElementById("registerForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("registerName").value;
-      const email = document.getElementById("registerEmail").value;
-      const password = document.getElementById("registerPassword").value;
-
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        return userCredential.user.updateProfile({ displayName: name });
-      })
-      .then(() => {
-        window.location.href = "welcome.html";
-      })
-      .catch(error => alert(error.message));
-    });
-  </script>
-</body>
+  <script src="js/script.js"></script> </body>
 </html>
