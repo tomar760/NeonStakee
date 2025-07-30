@@ -4,27 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NeonStakee - Game Zone</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/Hr0X7S0.png"> <!-- Favicon -->
 <style>
-body { background: #0d0d1a; color: white; font-family: Arial, sans-serif; text-align: center; }
-h1 { color: #00ffaa; }
-.game-list { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  background: #0d0d1a;
+  overflow-x: hidden;
+}
+canvas#bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+}
+h1 {
+  color: #00ffaa;
+  text-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa;
+}
+.game-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
 .game-card {
-  background: #1a1a2e;
+  background: rgba(20,20,40,0.8);
   width: 200px;
   padding: 15px;
   margin: 10px;
   border-radius: 10px;
   transition: 0.3s;
   text-align: center;
+  box-shadow: 0 0 10px #00ffaa;
 }
-.game-card:hover { transform: scale(1.05); background: #222244; }
-.game-card a { color: #00ffaa; text-decoration: none; font-weight: bold; }
+.game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00ffaa, 0 0 40px #00ffaa;
+}
+.game-card a {
+  color: #00ffaa;
+  text-decoration: none;
+  font-weight: bold;
+}
+.music-btn {
+  position: fixed;
+  top: 10px; right: 10px;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid #00ffaa;
+  border-radius: 50px;
+  padding: 10px;
+  cursor: pointer;
+  color: #00ffaa;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
 
+<canvas id="bg"></canvas>
+
 <h1>🎮 Welcome to NeonStakee Game Zone</h1>
-<p>Select a game to play</p>
+<button class="music-btn" onclick="toggleMusic()">🔊 Music</button>
 
 <div class="game-list">
   <div class="game-card"><a href="games/dino.html">🦖 Dino Run</a></div>
@@ -36,6 +80,59 @@ h1 { color: #00ffaa; }
 
 <br>
 <a href="welcome.html" style="color:#00ffaa;">⬅ Back to Home</a>
+
+<audio id="bgMusic" loop autoplay>
+  <source src="https://www.bensound.com/bensound-music/bensound-epic.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Background Music
+const music = document.getElementById("bgMusic");
+let musicOn = true;
+function toggleMusic() {
+  if (musicOn) {
+    music.pause();
+    document.querySelector(".music-btn").innerText = "🔇 Music";
+  } else {
+    music.play();
+    document.querySelector(".music-btn").innerText = "🔊 Music";
+  }
+  musicOn = !musicOn;
+}
+
+// Animated Background (Particles)
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+for (let i = 0; i < 100; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 3,
+    dx: (Math.random() - 0.5) * 1,
+    dy: (Math.random() - 0.5) * 1
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#00ffaa";
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 
 </body>
 </html>
