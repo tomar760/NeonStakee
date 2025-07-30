@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NeonStake - Login</title>
+
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png"/>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css"/>
 
   <!-- Firebase SDK -->
@@ -24,11 +28,39 @@
     };
     firebase.initializeApp(firebaseConfig);
   </script>
+
+  <style>
+    /* Extra styling for logo */
+    .site-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .site-logo img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa;
+    }
+    .site-logo span {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00ffaa;
+      text-shadow: 0 0 5px #00ffaa, 0 0 10px #00ffaa;
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
-    <h1 class="logo">NeonStake</h1>
-    
+
+    <!-- Premium Logo -->
+    <div class="site-logo">
+      <img src="assets/logo.png" alt="NeonStake Logo">
+      <span>NeonStake</span>
+    </div>
+
     <!-- Login Form -->
     <form id="loginForm" class="form active">
       <h2>Login</h2>
