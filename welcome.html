@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to NeonStake</title>
+<link rel="stylesheet" href="css/welcome.css">
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+</head>
+<body>
+  <!-- Particles Background -->
+  <div id="particles-js"></div>
+
+  <!-- Welcome Content -->
+  <div class="welcome-container">
+    <h1>🎮 Welcome to <span>NeonStake</span> 🎮</h1>
+    <p>Get ready for the ultimate gaming experience!</p>
+    <button onclick="startGames()">Enter Game Zone</button>
+  </div>
+
+  <!-- Background Music -->
+  <audio autoplay loop>
+    <source src="assets/welcome-music.mp3" type="audio/mpeg">
+  </audio>
+
+<script>
+function startGames(){
+  window.location.href = "games.html";
+}
+</script>
+
+<script>
+// Particles.js Config
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 80 },
+    "color": { "value": "#00ffaa" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3 },
+    "move": { "speed": 2 }
+  }
+});
+</script>
+</body>
+</html>
