@@ -1,1 +1,37 @@
-hy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeonStake - Login</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="logo">NeonStake</h1>
+    
+    <!-- Login Form -->
+    <form id="loginForm" class="form active">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required/>
+      <input type="password" id="loginPassword" placeholder="Password" required/>
+      <button type="submit">Login</button>
+      <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" class="form">
+      <h2>Register</h2>
+      <input type="text" id="registerName" placeholder="Full Name" required/>
+      <input type="email" id="registerEmail" placeholder="Email" required/>
+      <input type="password" id="registerPassword" placeholder="Password" required/>
+      <button type="submit">Register</button>
+      <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+    </form>
+  </div>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
