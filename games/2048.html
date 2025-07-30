@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2048 Game - NeonStake</title>
+<style>
+body {
+  background: #1e1e2f;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+}
+h1 {
+  color: #00ffaa;
+}
+#game-container {
+  display: inline-block;
+  background: #bbada0;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  grid-gap: 10px;
+}
+.cell {
+  width: 80px;
+  height: 80px;
+  background: #cdc1b4;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 6px;
+}
+</style>
+</head>
+<body>
+
+<h1>2048 Game</h1>
+<div id="game-container">
+  <div id="grid" class="grid"></div>
+</div>
+<p>Swipe or use arrow keys</p>
+<a href="../games.html" style="color:#00ffaa;">⬅ Back</a>
+
+<script>
+const grid = document.getElementById('grid');
+let cells = [];
+let size = 4;
+
+function setup() {
+  grid.innerHTML = '';
+  cells = [];
+  for (let i = 0; i < size * size; i++) {
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    cell.textContent = '';
+    cells.push(cell);
+    grid.appendChild(cell);
+  }
+  addNumber();
+  addNumber();
+}
+
+function addNumber() {
+  let emptyCells = cells.filter(c => c.textContent === '');
+  if (emptyCells.length === 0) return;
+  let randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  randomCell.textContent = Math.random() < 0.9 ? 2 : 4;
+  updateColors();
+}
+
+function updateColors() {
+  cells.forEach(cell => {
+    let value = parseInt(cell.textContent);
+    cell.style.background = value ? `hsl(${(Math.log2(value) * 30) % 360}, 70%, 60%)` : '#cdc1b4';
+  });
+}
+
+function move(direction) {
+  let moved = false;
+  for (let row = 0; row < size; row++) {
+    let line = [];
+    for (let col = 0; col < size; col++) {
+      let index = direction === 'left' || direction === 'right'
+        ? row * size + col
+        : col * size + row;
+      let val = cells[index].textContent ? parseInt(cells[index].textContent) : 0;
+      line.push(val);
+    }
+    if (direction === 'right' || direction === 'down') line.reverse();
+    let filtered = line.filter(v => v);
+    for (let i = 0; i < filtered.length - 1; i++) {
+      if (filtered[i] === filtered[i + 1])
