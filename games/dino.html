@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dino Run - NeonStake</title>
+<style>
+  body {
+    background: #f7f7f7;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid #ccc;
+  }
+</style>
+</head>
+<body>
+
+<h1>🦖 Dino Run</h1>
+<canvas id="dinoGame" width="800" height="200"></canvas>
+<p>Press SPACE to jump</p>
+<a href="../games.html">⬅ Back to Game Zone</a>
+
+<script>
+const canvas = document.getElementById('dinoGame');
+const ctx = canvas.getContext('2d');
+
+let dino = { x: 50, y: 150, w: 40, h: 40, dy: 0, jump: false };
+let gravity = 1.2;
+let obstacles = [];
+let frame = 0;
+let score = 0;
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !dino.jump) {
+    dino.dy = -15;
+    dino.jump = true;
+  }
+});
+
+function update() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Dino
+  dino.y += dino.dy;
+  dino.dy += gravity;
+  if (dino.y > 150) {
+    dino.y = 150;
+    dino.dy = 0;
+    dino.jump = false;
+  }
+  ctx.fillStyle = '#00aa88';
+  ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+
+  // Obstacles
+  if (frame % 90 === 0) {
+    obstacles.push({ x: canvas.width, y: 160, w: 20, h: 40 });
+  }
+  obstacles.forEach((obs, i) => {
+    obs.x -= 6;
+    ctx.fillStyle = '#555';
+    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+
+    // Collision
+    if (
+      dino.x < obs.x + obs.w &&
+      dino.x + dino.w > obs.x &&
+      dino.y < obs.y + obs.h &&
+      dino.y + dino.h > obs.y
+    ) {
+      alert('Game Over! Score: ' + score);
+      obstacles = [];
+      score = 0;
+    }
+
+    if (obs.x + obs.w < 0) {
+      obstacles.splice(i, 1);
+      score++;
+    }
+  });
+
+  // Score
+  ctx.fillStyle = '#000';
+  ctx.fillText('Score: ' + score, 700, 20);
+
+  frame++;
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+</body>
+</html>
