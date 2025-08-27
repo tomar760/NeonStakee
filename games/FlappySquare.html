@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flappy Square</title>
+  <style>
+    :root { --w: 360; --h: 540; --bg1: #1e293b; --bg2: #0f172a; --fg: #38bdf8; --pipe: #22c55e; --text: #e2e8f0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(160deg, var(--bg1), var(--bg2)); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--text); }
+    .wrap { display: grid; gap: 10px; }
+    .hud { display: flex; justify-content: space-between; align-items: center; width: min(92vw, var(--w)*1px); }
+    .btn { background: #0ea5e9; color: white; border: none; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 700; box-shadow: 0 6px 18px rgba(14,165,233,.35); }
+    .btn:active { transform: translateY(1px); }
+    canvas { width: min(92vw, var(--w)*1px); height: calc(min(92vw, var(--w)*1px) * (var(--h)/var(--w))); max-width: var(--w)*1px; max-height: var(--h)*1px; border-radius: 16px; background: #0b1220; box-shadow: 0 20px 40px rgba(0,0,0,.4), inset 0 0 0 2px rgba(255,255,255,.06); touch-action: manipulation; }
+    .hint { text-align: center; opacity: .8; font-size: 14px; }
+    .badge { background: rgba(226,232,240,.1); padding: 6px 10px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hud">
+      <div class="badge">Score: <span id="score">0</span></div>
+      <button id="startBtn" class="btn">Start / Tap</button>
+    </div>
+    <canvas id="game" width="360" height="540" aria-label="Flappy Square Game"></canvas>
+    <div class="hint">Tap screen / press Space or click Start to flap. Avoid pipes! [MIT license snippet]</div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('game');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      // Game world
+      const W = canvas.width, H = canvas.height;
+      const GRAVITY = 0.45; // fall speed
+      const FLAP = -7.5;    // jump force
+      const PIPE_GAP = 120; // gap between pipes
+      const PIPE_W = 56;
+      const PIPE_SPEED_BASE = 2.2;
+
+      let state = 'idle'; // 'idle' | 'play' | 'over'
+      let score = 0, best = 0, tick = 0, speed = PIPE_SPEED_BASE;
+
+      const player = {
+        x: 80, y: H/2, w: 26, h: 26, vy: 0, rot: 0,
+        reset() { this.x = 80; this.y = H/2; this.vy = 0; this.rot = 0; }
+      };
+
+      const pipes = [];
+      const rand = (a,b) => a + Math.random()*(b-a);
+
+      function addPipe() {
+        const margin = 40;
+        const gapY = rand(margin, H - margin - PIPE_GAP);
+        const id = crypto.getRandomValues(new Uint32Array(1));
+        pipes.push({ id, x: W + PIPE_W, top: gapY, bottom: gapY + PIPE_GAP, passed: false });
+      }
+
+      function resetGame() {
+        score = 0; tick = 0; speed = PIPE_SPEED_BASE;
+        pipes.length = 0; player.reset();
+        for (let i=0;i<3;i++){ addPipe(); pipes[pipes.length-1].x += i*180; }
+      }
+
+      function flap() {
+        if (state === 'idle') { state = 'play'; resetGame(); }
+        if (state === 'play') { player.vy = FLAP; }
+        if (state === 'over') { state = 'idle'; }
+      }
+
+      // Input
+      const startBtn = document.getElementById('startBtn');
+      startBtn.addEventListener('click', flap);
+      window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); flap(); }});
+      canvas.addEventListener('pointerdown', flap);
+
+      function update() {
+        if (state === 'idle') return;
+        if (state === 'play') {
+          tick++;
+          // Difficulty scale
+          if (tick % 600 === 0) speed += 0.2;
+
+          // Player physics
+          player.vy += GRAVITY;
+          player.y += player.vy;
+          player.rot = Math.max(-0.6, Math.min(1.0, player.vy / 10));
+
+          // Pipes
+          for (const p of pipes) {
+            p.x -= speed;
+            // Score when player passes pipe midpoint
+            if (!p.passed && p.x + PIPE_W < player.x) { p.passed = true; score++; }
+          }
+          // Remove off-screen and add new
+          while (pipes.length && pipes.x + PIPE_W < -4) pipes.shift();
+          if (pipes.length < 3 || (pipes[pipes.length-1].x < W - 180)) addPipe();
+
+          // Collisions
+          if (player.y + player.h/2 > H - 8 || player.y - player.h/2 < 8) state = 'over';
+          for (const p of pipes) {
+            const px1 = p.x, px2 = p.x + PIPE_W;
+            const pyTop = p.top, pyBot = p.bottom;
+            const rx1 = player.x - player.w/2, rx2 = player.x + player.w/2;
+            const ry1 = player.y - player.h/2, ry2 = player.y + player.h/2;
+            const hitX = rx2 > px1 && rx1 < px2;
+            const hitY = ry1 < pyTop || ry2 > pyBot;
+            if (hitX && hitY) { state = 'over'; break; }
+          }
+
+          if (state === 'over') best = Math.max(best, score);
+        }
+      }
+
+      function drawBackground() {
+        // Sky gradient
+        const g = ctx.createLinearGradient(0,0,0,H);
+        g.addColorStop(0, '#0ea5e9');
+        g.addColorStop(1, '#0369a1');
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,W,H);
+
+        // Ground
+        ctx.fillStyle = '#0b1220';
+        ctx.fillRect(0,H-8,W,8);
+      }
+
+      function drawPipes() {
+        for (const p of pipes) {
+          // Pipes
+          ctx.fillStyle = '#16a34a';
+          ctx.fillRect(p.x, 0, PIPE_W, p.top);
+          ctx.fillRect(p.x, p.bottom, PIPE_W, H - p.bottom - 8);
+          // Pipe rims
+          ctx.fillStyle = '#22c55e';
+          ctx.fillRect(p.x - 2, p.top - 14, PIPE_W + 4, 14);
+          ctx.fillRect(p.x - 2, p.bottom, PIPE_W + 4, 14);
+        }
+      }
+
+      function drawPlayer() {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.rotate(player.rot);
+        // Body
+        ctx.fillStyle = '#38bdf8';
+        roundRect(ctx, -player.w/2, -player.h/2, player.w, player.h, 6, true);
+        // Eye
+        ctx.fillStyle = '#0b1220';
+        ctx.beginPath(); ctx.arc(4, -4, 3, 0, Math.PI*2); ctx.fill();
+        // Wing
+        ctx.fillStyle = '#7dd3fc';
+        roundRect(ctx, -10, 0, 14, 8, 4, true);
+        ctx.restore();
+      }
+
+      function roundRect(ctx, x, y, w, h, r, fill=true) {
+        ctx.beginPath();
+        ctx.moveTo(x+r, y);
+        ctx.arcTo(x+w, y, x+w, y+h, r);
+        ctx.arcTo(x+w, y+h, x, y+h, r);
+        ctx.arcTo(x, y+h, x, y, r);
+        ctx.arcTo(x, y, x+w, y, r);
+        if (fill) ctx.fill(); else ctx.stroke();
+      }
+
+      function drawHUD() {
+        ctx.fillStyle = 'rgba(0,0,0,.25)';
+        ctx.fillRect(0,0,W,40);
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '700 16px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`Score: ${score}`, 12, 20);
+        const b = best;
+        const text = state === 'over' ? `Game Over • Best: ${b} • Press Space/Tap` : (state === 'idle' ? 'Tap/Space to Start' : `Speed: ${speed.toFixed(1)}`);
+        const w = ctx.measureText(text).width;
+        ctx.fillText(text, (W - w)/2, 20);
+      }
+
+      function loop() {
+        update();
+        drawBackground();
+        drawPipes();
+        drawPlayer();
+        drawHUD();
+        document.getElementById('score').textContent = String(score);
+        requestAnimationFrame(loop);
+      }
+
+      // Initialize
+      resetGame();
+      loop();
+    })();
+  </script>
+</body>
+</html>
