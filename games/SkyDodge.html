@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Sky Dodge</title><style>
+body{margin:0;display:grid;place-items:center;min-height:100vh;background:#0b1220;color:#e2e8f0;font-family:system-ui}
+canvas{background:#0f172a;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.04)}
+</style></head><body><canvas id="cv" width="360" height="540"></canvas><script>
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');const P={x:160,y:480,w:40,h:14,spd:6};let t=0,alive=true,score=0,obs=[];
+addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();P.x=Math.max(0,Math.min(cv.width-P.w,(e.clientX-r.left)-P.w/2));});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')P.x=Math.max(0,P.x-P.spd*3); if(e.key==='ArrowRight')P.x=Math.min(cv.width-P.w,P.x+P.spd*3);});
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();P.x=Math.max(0,Math.min(cv.width-P.w,(e.clientX-r.left)-P.w/2));});
+function spawn(){const w=20+Math.random()*80;obs.push({x:Math.random()*(cv.width-w),y:-30,w, h:14, v:2+Math.random()*3});}
+function step(ts){if(!alive){cx.fillStyle='#e2e8f0';cx.font='bold 20px system-ui';cx.fillText('Game Over! Score '+score,80,260);return;}
+if(ts-t>700){spawn();t=ts;} cx.clearRect(0,0,cv.width,cv.height);
+// bg
+const g=cx.createLinearGradient(0,0,0,cv.height);g.addColorStop(0,'#0ea5e9');g.addColorStop(1,'#1d4ed8');cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height);
+// player
+cx.fillStyle='#22d3ee';cx.fillRect(P.x,P.y,P.w,P.h);
+// obstacles
+cx.fillStyle='#f97316';for(const o of obs){o.y+=o.v;cx.fillRect(o.x,o.y,o.w,o.h);
+if(o.y>cv.height+20)score++; if(o.x<P.x+P.w&&o.x+o.w>P.x&&o.y<P.y+P.h&&o.y+o.h>P.y)alive=false;}
+requestAnimationFrame(step);}requestAnimationFrame(step);
+</script></body></html>
