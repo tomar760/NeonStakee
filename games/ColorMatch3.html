@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Color Match 3</title><style>
+body{margin:0;display:grid;place-items:center;min-height:100vh;background:#0b1220;color:#e2e8f0;font-family:system-ui}
+canvas{background:#0f172a;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.04)}
+</style></head><body><canvas id="cv" width="360" height="360"></canvas><script>
+const N=8,S=40,cv=document.getElementById('cv'),cx=cv.getContext('2d');const colors=['#ef4444','#22c55e','#3b82f6','#eab308','#a855f7'];
+let grid=[...Array(N)].map(()=>Array.from({length:N},()=>Math.floor(Math.random()*colors.length))), sel=null, score=0;
+cv.addEventListener('click',e=>{const r=cv.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/S),y=Math.floor((e.clientY-r.top)/S);
+if(sel&&((Math.abs(sel.x-x)+Math.abs(sel.y-y))===1)){swap(sel.x,sel.y,x,y); if(!clearMatches())swap(sel.x,sel.y,x,y); sel=null;draw();}
+else{sel={x,y}; draw();}});
+function swap(x1,y1,x2,y2){[grid[y1][x1],grid[y2][x2]]=[grid[y2][x2],grid[y1][x1]];}
+function clearMatches(){let rm=[...Array(N)].map(()=>Array(N).fill(false)), any=false;
+// rows
+for(let y=0;y<N;y++){let run=1;for(let x=1;x<=N;x++){if(x<N&&grid[y][x]===grid[y][x-1])run++;else{if(run>=3){any=true;for(let k=1;k<=run;k++)rm[y][x-k]=true;} run=1;}}}
+// cols
+for(let x=0;x<N;x++){let run=1;for(let y=1;y<=N;y++){if(y<N&&grid[y][x]===grid[y-1][x])run++;else{if(run>=3){any=true;for(let k=1;k<=run;k++)rm[y-k][x]=true;} run=1;}}}
+if(any){for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(rm[y][x]){grid[y][x]=null;score+=10;}
+// gravity
+for(let x=0;x<N;x++){let col=[];for(let y=N-1;y>=0;y--)if(grid[y][x]!=null)col.push(grid[y][x]);while(col.length<N)col.push(Math.floor(Math.random()*colors.length));
+for(let y=N-1;y>=0;y--)grid[y][x]=col[N-1-y];}
+setTimeout(()=>{if(clearMatches())draw(); else draw();},120);}
+return any;}
+function draw(){cx.clearRect(0,0,cv.width,cv.height); for(let y=0;y<N;y++)for(let x=0;x<N;x++){cx.fillStyle=grid[y][x]==null?'#111827':colors[grid[y][x]];cx.fillRect(x*S,y*S,S-2,S-2);}
+if(sel){cx.strokeStyle='#e2e8f0';cx.lineWidth=3;cx.strokeRect(sel.x*S+1,sel.y*S+1,S-4,S-4);} cx.fillStyle='#e2e8f0';cx.font='bold 16px system-ui';cx.fillText('Score '+score,10,20);}
+draw();clearMatches();
+</script></body></html>
