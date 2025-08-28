@@ -1,0 +1,21 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Neon Snake</title><style>
+body{margin:0;background:#0b1220;color:#e2e8f0;display:grid;place-items:center;min-height:100vh;font-family:system-ui}
+.wrap{display:grid;gap:8px}canvas{background:#0f172a;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.04)}
+.hud{display:flex;justify-content:space-between} .btn{padding:8px 12px;border:0;border-radius:10px;background:#22d3ee;color:#001;cursor:pointer;font-weight:700}
+</style></head><body><div class="wrap"><div class="hud"><div>Score: <span id="sc">0</span></div><button class="btn" id="rst">Restart</button></div>
+<canvas id="cv" width="360" height="360"></canvas><div>Arrows/WASD to move</div></div><script>
+const C=20, S=18; const cv=document.getElementById('cv'),cx=cv.getContext('2d'); let dir={x:1,y:0}, next=dir, snake=[{x:5,y:9},{x:4,y:9},{x:3,y:9}], food=spawn(), score=0, alive=true, t=0, spd=7;
+function spawn(){let p;do{p={x:Math.floor(Math.random()*S),y:Math.floor(Math.random()*S)}}while(snake.some(s=>s.x===p.x&&s.y===p.y));return p;}
+function key(e){const m=e.key.toLowerCase();if(m==='arrowup'||m==='w')next={x:0,y:-1}; if(m==='arrowdown'||m==='s')next={x:0,y:1};
+if(m==='arrowleft'||m==='a')next={x:-1,y:0}; if(m==='arrowright'||m==='d')next={x:1,y:0};}
+function step(ts){if(!alive)return; if(ts-t<1000/spd){requestAnimationFrame(step);return;} t=ts; // apply turn (no reverse)
+if(next.x!==-dir.x||next.y!==-dir.y)dir=next; const head={x:(snake.x+dir.x+S)%S,y:(snake.y+dir.y+S)%S};
+if(snake.some(s=>s.x===head.x&&s.y===head.y)){alive=false;} else {snake.unshift(head); if(head.x===food.x&&head.y===food.y){score++; document.getElementById('sc').textContent=score; food=spawn(); if(score%5===0)spd++;} else snake.pop();}
+draw(); requestAnimationFrame(step);}
+function draw(){cx.clearRect(0,0,cv.width,cv.height); // grid glow
+for(let y=0;y<S;y++)for(let x=0;x<S;x++){cx.fillStyle='rgba(56,189,248,.06)';cx.fillRect(x*C,y*C,C-1,C-1);}
+cx.fillStyle='#22c55e';cx.shadowColor='#22c55e';cx.shadowBlur=10; snake.forEach((s,i)=>{cx.globalAlpha=1-(i/snake.length)*.3;cx.fillRect(s.x*C+2,s.y*C+2,C-4,C-4);}); cx.globalAlpha=1;cx.shadowBlur=0;
+cx.fillStyle='#f43f5e';cx.beginPath();cx.arc(food.x*C+C/2,food.y*C+C/2, C*0.35,0,Math.PI*2);cx.fill();}
+document.getElementById('rst').onclick=()=>{dir={x:1,y:0};next=dir;snake=[{x:5,y:9},{x:4,y:9},{x:3,y:9}];food=spawn();score=0;document.getElementById('sc').textContent=0;alive=true;spd=7;requestAnimationFrame(step);}
+addEventListener('keydown',key);draw();requestAnimationFrame(step);
+</script></body></html>
