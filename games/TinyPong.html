@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Tiny Pong</title><style>
+body{margin:0;display:grid;place-items:center;min-height:100vh;background:#0b1220;color:#e2e8f0;font-family:system-ui}
+canvas{background:#0f172a;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.04)}
+</style></head><body><canvas id="cv" width="420" height="260"></canvas><script>
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');const P={w:80,h:10,x:170,y:230},B={x:40,y:40,r:7,vx:3,vy:2};let s=0;
+addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();P.x=Math.min(cv.width-P.w,Math.max(0,(e.clientX-r.left)-P.w/2));});
+addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();P.x=Math.min(cv.width-P.w,Math.max(0,(e.clientX-r.left)-P.w/2));});
+function loop(){cx.clearRect(0,0,cv.width,cv.height);cx.fillStyle='#22d3ee';cx.fillRect(P.x,P.y,P.w,P.h);
+cx.fillStyle='#eab308';cx.beginPath();cx.arc(B.x,B.y,B.r,0,Math.PI*2);cx.fill();
+cx.fillStyle='#e2e8f0';cx.font='bold 16px system-ui';cx.fillText('Score '+s,10,20);
+B.x+=B.vx;B.y+=B.vy; if(B.x<B.r||B.x>cv.width-B.r)B.vx*=-1; if(B.y<B.r)B.vy*=-1;
+if(B.y>cv.height+B.r){alert('Game Over! Score '+s);location.reload();}
+if(B.x>P.x&&B.x<P.x+P.w&&B.y+B.r>P.y&&B.y<P.y+B.h){B.vy=-Math.abs(B.vy); const hit=(B.x-(P.x+P.w/2))/(P.w/2);B.vx=hit*4; s++; }
+requestAnimationFrame(loop);}requestAnimationFrame(loop);
+</script></body></html>
